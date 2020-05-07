@@ -28,8 +28,8 @@ if ! [ -z "${version_name}" ] ; then
   echo " (i) Version Name: ${version_name}"
 fi
 
-VERSIONCODE=`grep versionCode ${manifest_file} | sed 's/.*versionCode="//;s/".*//'`
-VERSIONNAME=`grep versionName ${manifest_file} | sed 's/.*versionName\s*=\s*\"\([^\"]*\)\".*/\1/g'`
+VERSIONCODE=`grep 'versionCode\s' ${manifest_file} | sed 's/.*versionCode //'`
+VERSIONNAME=`grep 'versionName\s' ${manifest_file} | sed 's/.*versionName "\([^\"]*\)\".*/\1/g'`
 
 if [ -z "${VERSIONCODE}" ] ; then
   echo " [!] Could not find current Version Code!"
@@ -63,11 +63,11 @@ echo "Version name detected: ${VERSIONNAME}"
 set -v
 # ---- Set Build Version Code:
 
-sed -i.bak "s/android:versionCode="\"${VERSIONCODE}\""/android:versionCode="\"${CONFIG_new_version_code}\""/" ${manifest_file}
+sed -i.bak "s/versionCode ${VERSIONCODE}/versionCode ${CONFIG_new_version_code}/" ${manifest_file}
 
 # ---- Set Build Version Code if it was specified:
 if ! [ -z "${version_name}" ] ; then
-  sed -i.bak "s/android:versionName="\"${VERSIONNAME}\""/android:versionName="\"${version_name}\""/" ${manifest_file}
+  sed -i.bak "s/versionName \"${VERSIONNAME}\"/versionName \"${version_name}\"/" ${manifest_file}
 fi
 
 
